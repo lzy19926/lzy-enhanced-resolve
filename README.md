@@ -38,3 +38,26 @@ myResolve("/some/path/to/folder", "ts-module", (err, result) => {
 	result; // === "/some/node_modules/ts-module/index.ts"
 });
 ```
+
+
+// 传入的参数会包成requestObj, 这个OBJ会在各个生命周期插件中流转,一步步处理
+
+
+// 内部生命周期插件流转顺序(createResolver时注册)
+
+    resolver.ensureHook("resolve");          //解析模块路径
+    resolver.ensureHook("parsed-resolve");   //解析 解析后的模块路径
+    resolver.ensureHook("internal");         // 内部模块
+    resolver.ensureHook("resolveInPackage"); //包内解析
+    resolver.ensureHook("existingDirectory");// 已存在目录
+    resolver.ensureHook("rawFile");          // 原始文件
+    resolver.ensureHook("finalFile");// 最终文件
+    resolver.ensureHook("resolved");// 解析后
+
+
+// 其中在Resolver中定义了四个钩子, 分别在不同时间点触发
+
+   resolveStep: // resolve的单步调用
+   resolve:     // 正常resolve流程,内部有多个resolveStep
+   noResolve:   //  resolve错误时调用
+   result:      //  最终结果处理,执行resolve回调  
