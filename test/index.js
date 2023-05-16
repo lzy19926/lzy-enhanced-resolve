@@ -22,9 +22,13 @@ function createResolver_Test() {
 
     const resolver = createResolver(defaultOptions)
 
+    let outRes = undefined
     resolver.resolve("/some/path/to/folder", "module/dir", (err, result) => {
         console.log('plugins流转完毕', err, result);
+        outRes = result
     });
+    //! 如果是async类型的resolver,则cb会在最后执行,可以变量提升 
+    console.log(outRes, '---');
 }
 
 
